@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare Products</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+    }
+
+    .product-img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    /* Modal dark theme */
+    .modal-content {
+      background-color: #111;
+      color: #fff;
+      border-radius: 12px;
+    }
+
+    .modal-header, .modal-body {
+      border-color: #222;
+    }
+
+    .table {
+      color: #fff;
+    }
+
+    .table th, .table td {
+      border-color: #444;
+    }
+
+    select.form-control {
+      background-color: #222;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    select.form-control option {
+      background-color: #222;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Modal -->
+  <div class="modal fade show" id="compareModal" tabindex="-1" aria-labelledby="compareModalLabel" aria-hidden="true" style="display:block; background: rgba(0,0,0,0.8);">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <!-- Modal Header -->
+<div class="modal-header">
+  <h5 class="modal-title" id="compareModalLabel">Compare Products</h5>
+  <!-- Back button goes to previous page -->
+  <button class="btn btn-warning ms-auto" onclick="history.back()">Back</button>
+</div>
+
+        <div class="modal-body">
+          <!-- Dropdowns -->
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <select class="form-control product-select" id="select1">
+                <option value="">Select Product 1</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select class="form-control product-select" id="select2">
+                <option value="">Select Product 2</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select class="form-control product-select" id="select3">
+                <option value="">Select Product 3</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Comparison Table -->
+          <table class="table table-bordered compare-table text-center">
+            <thead class="table-dark">
+              <tr>
+                <th>Feature</th>
+                <th>Product 1</th>
+                <th>Product 2</th>
+                <th>Product 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Image</td>
+                <td><img id="img1" class="product-img" src="" alt=""></td>
+                <td><img id="img2" class="product-img" src="" alt=""></td>
+                <td><img id="img3" class="product-img" src="" alt=""></td>
+              </tr>
+              <tr>
+                <td>Name</td>
+                <td id="name1"></td>
+                <td id="name2"></td>
+                <td id="name3"></td>
+              </tr>
+              <tr>
+                <td>Feature 1</td>
+                <td id="f1_1"></td>
+                <td id="f1_2"></td>
+                <td id="f1_3"></td>
+              </tr>
+              <tr>
+                <td>Feature 2</td>
+                <td id="f2_1"></td>
+                <td id="f2_2"></td>
+                <td id="f2_3"></td>
+              </tr>
+              <tr>
+                <td>Feature 3</td>
+                <td id="f3_1"></td>
+                <td id="f3_2"></td>
+                <td id="f3_3"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const products = {
+      "crayola": {name: "Crayola Markers", img: "images/crayola markers 1.jpg", f1:"Smooth colors", f2:"Washable ink", f3:"Non-toxic"},
+      "ohuhu": {name: "Ohuhu Markers", img: "images/ohuhu.PNG", f1:"Dual tips", f2:"Alcohol-based", f3:"Blending friendly"},
+      "sharpie": {name: "Sharpie Markers", img: "images/sharpie markers1.jpg", f1:"Bold ink", f2:"Quick dry", f3:"Fade resistant"},
+      "prime": {name: "Prime Markers", img: "images/prime-2.jpg", f1:"Rich pigment", f2:"Wide nibs", f3:"Affordable"},
+      "classmate":{name:"Classmate Notebook",img:"images/classmate-img-sample-2.jpg",f1:"Eco-Friendly",f2:"Attractive Designs",f3:"Organized Pages"},
+      "midori":{name:"Midori Notebook",img:"images/midori-notebook-img-1.jpg",f1:"Minimalist Designs",f2:"Include Bookmarks",f3:"Lay-Flat Binding"},
+      "rhodia":{name:"Rhodia Notebook",img:"images/rhodia-notebook-img-sample-2.jpg",f1:"Light Weight Notebooks",f2:"Extra White Smooth Paper",f3:"Available With Graph,Lined Paper"},
+      "canon":{name:"Canon Calculator",img:"images/canon.png",f1:"Dual Display And Built-in Functions",f2:"Sustainable Designs",f3:"Constant And Conversions"},
+      "casio":{name:"Casio Calculator",img:"images/Casio-1.jpg",f1:"Natural Textbook Display",f2:"Mathbox And QR Code Functions",f3:"Complex Number Calculations"},
+      "sharp":{name:"Sharp Calculator",img:"images/Sharp-1.jpg",f1:"Write-View Display",f2:"Multi-Line Playback",f3:"Dot Matrix Display"},
+      "piano":{name:"Piano Mathadix",img:"images/piano-1.jpg",f1:"Durable Construction",f2:"Compact Design",f3:"Secure Closure"},
+      "oro":{name:"Oro Mathadox",img:"images/oro-1.jpg",f1:"Durable Construction",f2:"Ergonomic Design",f3:"Multi-Purpose Functionality"},
+      "dux":{name:"Dux Mathadox",img:"images/dux-2.jpg",f1:"Durable Construction",f2:"Compact And Portable",f3:"Precision And Reliability"}
+    };
+
+    $(document).ready(function() {
+      // Fill dropdowns
+      $.each(products, function(key, product) {
+        $(".product-select").append(`<option value="${key}">${product.name}</option>`);
+      });
+
+      // Update table on select
+      $(".product-select").change(function() {
+        const slot = this.id.replace("select","");
+        const key = $(this).val();
+        if(products[key]){
+          const p = products[key];
+          $(`#img${slot}`).attr("src",p.img).attr("alt",p.name);
+          $(`#name${slot}`).text(p.name);
+          $(`#f1_${slot}`).text(p.f1);
+          $(`#f2_${slot}`).text(p.f2);
+          $(`#f3_${slot}`).text(p.f3);
+        } else {
+          $(`#img${slot}`).attr("src","").attr("alt","");
+          $(`#name${slot}`).text("");
+          $(`#f1_${slot}`).text("");
+          $(`#f2_${slot}`).text("");
+          $(`#f3_${slot}`).text("");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
